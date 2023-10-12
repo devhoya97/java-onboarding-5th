@@ -3,7 +3,7 @@ package onboarding;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -128,6 +128,124 @@ class ApplicationTest {
             List<String> visitors = List.of("bedi", "bedi", "donut", "bedi", "shakevan");
             List<String> result = List.of("andole", "jun", "bedi");
             assertThat(Problem7.solution(user, friends, visitors)).isEqualTo(result);
+        }
+        @Test
+        void addFriendshipMap_테스트() {
+            //given
+            Map<String, Set<String>> friendshipMap = new HashMap<>();
+            List<String> friendship = Arrays.asList("donut", "andole");
+            //when
+            Problem7.addFriendshipMap(friendshipMap, friendship);
+            //then
+            assertThat(friendshipMap.get("donut")).containsExactly("andole");
+            assertThat(friendshipMap.get("andole")).containsExactly("donut");
+        }
+        @Test
+        void getFriendshipMap_테스트() {
+            //given
+            List<List<String>> friends = List.of(
+                    List.of("donut", "andole"),
+                    List.of("donut", "jun"),
+                    List.of("donut", "mrko"),
+                    List.of("shakevan", "andole"),
+                    List.of("shakevan", "jun"),
+                    List.of("shakevan", "mrko"),
+                    List.of("mrko", "aaa"),
+                    List.of("shakevan", "aaa"),
+                    List.of("donut", "aaa"),
+                    List.of("mrko", "aza"),
+                    List.of("shakevan", "aza"),
+                    List.of("donut", "aza")
+            );
+            //when
+            Map<String, Set<String>> friendshipMap = Problem7.getFriendshipMap(friends);
+            //then
+            System.out.println(friendshipMap);
+        }
+        @Test
+        void getRecommendOfUserMapWithFriends_테스트() {
+            //given
+            String user = "mrko";
+            List<List<String>> friends = List.of(
+                    List.of("donut", "andole"),
+                    List.of("donut", "jun"),
+                    List.of("donut", "mrko"),
+                    List.of("shakevan", "andole"),
+                    List.of("shakevan", "jun"),
+                    List.of("shakevan", "mrko"),
+                    List.of("shakevan", "aaa"),
+                    List.of("donut", "aaa"),
+                    List.of("shakevan", "aza"),
+                    List.of("donut", "aza")
+            );
+            Map<String, Set<String>> friendshipMap = Problem7.getFriendshipMap(friends);
+            //when
+            Map<String, Integer> recommendMapOfUserWithFriends = Problem7.getRecommendMapOfUserWithFriends(user, friendshipMap);
+            //then
+            System.out.println(recommendMapOfUserWithFriends);
+        }
+
+        @Test
+        void getRecommendMapOfUserWithVisitors_테스트() {
+            //given
+            String user = "mrko";
+            List<String> visitors = List.of("bedi", "bedi", "donut", "bedi", "shakevan");
+            List<List<String>> friends = List.of(
+                    List.of("donut", "andole"),
+                    List.of("donut", "jun"),
+                    List.of("donut", "mrko"),
+                    List.of("shakevan", "andole"),
+                    List.of("shakevan", "jun"),
+                    List.of("shakevan", "mrko")
+            );
+            Map<String, Set<String>> friendshipMap = Problem7.getFriendshipMap(friends);
+            //when
+            Map<String, Integer> recommendMapOfUserWithVisitors = Problem7.getRecommendMapOfUserWithVisitors(user, visitors, friendshipMap);
+            //then
+            System.out.println(recommendMapOfUserWithVisitors);
+        }
+
+        @Test
+        void getRecommendMapOfUser_테스트() {
+            //given
+            String user = "mrko";
+            List<String> visitors = List.of("bedi", "bedi", "donut", "bedi", "shakevan");
+            List<List<String>> friends = List.of(
+                    List.of("donut", "andole"),
+                    List.of("donut", "jun"),
+                    List.of("donut", "mrko"),
+                    List.of("shakevan", "andole"),
+                    List.of("shakevan", "jun"),
+                    List.of("shakevan", "mrko")
+            );
+            //when
+            Map<String, Integer> recommendMapOfUser = Problem7.getRecommendMapOfUser(user, friends, visitors);
+            //then
+            System.out.println(recommendMapOfUser);
+        }
+
+        @Test
+        void getSortedRecommendListOfUser_테스트() {
+            //given
+            String user = "mrko";
+            List<List<String>> friends = List.of(
+                    List.of("donut", "andole"),
+                    List.of("donut", "jun"),
+                    List.of("donut", "mrko"),
+                    List.of("shakevan", "andole"),
+                    List.of("shakevan", "jun"),
+                    List.of("shakevan", "mrko"),
+//                    List.of("shakevan", "aaa"),
+//                    List.of("donut", "aaa"),
+                    List.of("shakevan", "aba"),
+                    List.of("donut", "aba")
+            );
+            List<String> visitors = List.of("bedi", "bedi", "donut", "bedi", "shakevan", "mihno", "ayewon", "ayewon", "ayewon", "sole");
+            List<String> result = List.of("andole", "jun", "bedi");
+            //when
+            List<String> answer = Problem7.solution(user, friends, visitors);
+            //then
+            System.out.println(answer);
         }
     }
 }
