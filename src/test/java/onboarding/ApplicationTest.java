@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 class ApplicationTest {
     @Nested
@@ -105,10 +106,86 @@ class ApplicationTest {
                     List.of("jason@email.com", "제이슨"),
                     List.of("woniee@email.com", "워니"),
                     List.of("mj@email.com", "엠제이"),
+                    List.of("nowm@email.com", "이제엠"),
+                    List.of("aaa@email.com", "가나다라"),
+                    List.of("bbb@email.com", "가나"),
+                    List.of("ccc@email.com", "이제다라")
+            );
+            List<String> result = List.of("aaa@email.com", "bbb@email.com", "ccc@email.com", "jason@email.com", "jm@email.com", "mj@email.com", "nowm@email.com");
+            assertThat(Problem6.solution(forms)).isEqualTo(result);
+        }
+        @Test
+        void validate_테스트() {
+            //given
+            List<List<String>> forms = List.of(
+                    List.of("jm@naver.com", "제이엠"),
+                    List.of("jason@email.com", "제이슨"),
+                    List.of("woniee@email.com", "워니"),
+                    List.of("mj@email.com", "엠제이"),
                     List.of("nowm@email.com", "이제엠")
             );
-            List<String> result = List.of("jason@email.com", "jm@email.com", "mj@email.com");
-            assertThat(Problem6.solution(forms)).isEqualTo(result);
+            //when
+            Throwable thrown = catchThrowable(() -> {
+                Problem6.validateForms(forms);
+            });
+
+            //then
+            assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        void getLengthTwoNicknameSetOfACrew_테스트() {
+            //given
+            List<List<String>> forms = List.of(
+                    List.of("jm@naver.com", "제이이이이이이엠"),
+                    List.of("jason@email.com", "제이슨"),
+                    List.of("woniee@email.com", "워니"),
+                    List.of("mj@email.com", "엠제이"),
+                    List.of("nowm@email.com", "이제엠")
+            );
+            String nickname = forms.get(0).get(1);
+            //when
+            Set<String> lengthTwoNicknameSet = Problem6.getLengthTwoNicknameSetOfACrew(nickname);
+            //then
+            assertThat(lengthTwoNicknameSet).containsExactly("제이", "이엠", "이이").hasSize(3);
+        }
+        @Test
+        void addLengthTwoNicknameAndEmailMap_테스트() {
+            //given
+            List<List<String>> forms = List.of(
+                    List.of("jm@naver.com", "제이엠"),
+                    List.of("jason@email.com", "제이슨"),
+                    List.of("woniee@email.com", "워니"),
+                    List.of("mj@email.com", "엠제이"),
+                    List.of("nowm@email.com", "이제엠")
+            );
+            Map<String, Set<String>> lengthTwoNicknameAndEmailMap = new HashMap<>();
+            String email = forms.get(0).get(0);
+            String nickname = forms.get(0).get(1);
+            Set<String> lengthTwoNicknameSet = Problem6.getLengthTwoNicknameSetOfACrew(nickname);
+            //when
+            Problem6.addLengthTwoNicknameAndEmailMap(lengthTwoNicknameAndEmailMap, email, lengthTwoNicknameSet);
+            email = forms.get(1).get(0);
+            nickname = forms.get(1).get(1);
+            lengthTwoNicknameSet = Problem6.getLengthTwoNicknameSetOfACrew(nickname);
+            Problem6.addLengthTwoNicknameAndEmailMap(lengthTwoNicknameAndEmailMap, email, lengthTwoNicknameSet);
+            //then
+            System.out.println(lengthTwoNicknameAndEmailMap);
+        }
+        @Test
+        void getLengthTwoNicknameAndEmailMap_테스트() {
+            //given
+            List<List<String>> forms = List.of(
+                    List.of("jm@naver.com", "제이엠"),
+                    List.of("jason@email.com", "제이슨"),
+                    List.of("woniee@email.com", "워니"),
+                    List.of("mj@email.com", "엠제이"),
+                    List.of("nowm@email.com", "이제엠")
+            );
+            //when
+            Map<String, Set<String>> lengthTwoNicknameAndEmailMap = Problem6.getLengthTwoNicknameAndEmailMap(forms);
+            //then
+            System.out.println(lengthTwoNicknameAndEmailMap);
         }
     }
 
